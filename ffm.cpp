@@ -535,6 +535,7 @@ ffm_model ffm_train_on_disk(string tr_path, string va_path, ffm_parameter param)
     problem_on_disk va(va_path);
 
     ffm_model model = init_model(tr.meta.n, tr.meta.m, param);
+    ffm_save_model(model, "./init_model");
 
     bool auto_stop = param.auto_stop && !va_path.empty();
 
@@ -565,13 +566,13 @@ ffm_model ffm_train_on_disk(string tr_path, string va_path, ffm_parameter param)
 
         vector<ffm_int> outer_order(prob.meta.num_blocks);
         iota(outer_order.begin(), outer_order.end(), 0);
-        random_shuffle(outer_order.begin(), outer_order.end());
+        //random_shuffle(outer_order.begin(), outer_order.end());
         for(auto blk : outer_order) {
             ffm_int l = prob.load_block(blk);
 
             vector<ffm_int> inner_order(l);
             iota(inner_order.begin(), inner_order.end(), 0);
-            random_shuffle(inner_order.begin(), inner_order.end());
+            //random_shuffle(inner_order.begin(), inner_order.end());
 
 #if defined USEOMP
 #pragma omp parallel for schedule(static) reduction(+: loss)
@@ -605,6 +606,21 @@ ffm_model ffm_train_on_disk(string tr_path, string va_path, ffm_parameter param)
         return loss / prob.meta.l;
     };
 
+    if(!va.is_empty()) {
+        cout.width(4);
+        cout << 0;
+        cout.width(13);
+        cout << fixed << setprecision(5) << -1;
+
+        ffm_double va_loss = one_epoch(va, false);
+
+        cout.width(13);
+        cout << fixed << setprecision(8) << va_loss;
+
+        cout.width(13);
+        cout << fixed << setprecision(1) << 0 << endl;
+    }
+
     for(ffm_int iter = 1; iter <= param.nr_iters; iter++) {
         timer.tic();
         ffm_double tr_loss = one_epoch(tr, true);
@@ -619,7 +635,7 @@ ffm_model ffm_train_on_disk(string tr_path, string va_path, ffm_parameter param)
             ffm_double va_loss = one_epoch(va, false);
 
             cout.width(13);
-            cout << fixed << setprecision(5) << va_loss;
+            cout << fixed << setprecision(8) << va_loss;
 
             if(auto_stop) {
                 if(va_loss > best_va_loss) {
