@@ -547,11 +547,11 @@ ffm_model ffm_train_on_disk(string tr_path, string va_path, ffm_parameter param)
 
     cout.width(4);
     cout << "iter";
-    cout.width(13);
+    cout.width(18);
     cout << "tr_logloss";
     if(!va_path.empty())
     {
-        cout.width(13);
+        cout.width(18);
         cout << "va_logloss";
     }
     cout.width(13);
@@ -609,13 +609,13 @@ ffm_model ffm_train_on_disk(string tr_path, string va_path, ffm_parameter param)
     if(!va.is_empty()) {
         cout.width(4);
         cout << 0;
-        cout.width(13);
-        cout << fixed << setprecision(5) << -1;
+        cout.width(18);
+        cout << fixed << setprecision(13) << -1;
 
         ffm_double va_loss = one_epoch(va, false);
 
-        cout.width(13);
-        cout << fixed << setprecision(8) << va_loss;
+        cout.width(18);
+        cout << fixed << setprecision(13) << va_loss;
 
         cout.width(13);
         cout << fixed << setprecision(1) << 0 << endl;
@@ -628,14 +628,14 @@ ffm_model ffm_train_on_disk(string tr_path, string va_path, ffm_parameter param)
 
         cout.width(4);
         cout << iter;
-        cout.width(13);
-        cout << fixed << setprecision(5) << tr_loss;
+        cout.width(18);
+        cout << fixed << setprecision(13) << tr_loss;
 
         if(!va.is_empty()) {
             ffm_double va_loss = one_epoch(va, false);
 
-            cout.width(13);
-            cout << fixed << setprecision(8) << va_loss;
+            cout.width(18);
+            cout << fixed << setprecision(13) << va_loss;
 
             if(auto_stop) {
                 if(va_loss > best_va_loss) {
