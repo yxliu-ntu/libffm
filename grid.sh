@@ -1,5 +1,6 @@
 #data=criteo
-data=libffm_toy
+#data=libffm_toy
+data=outbrain
 log_dir=exp_logs/$data
 mkdir -p $log_dir
 
@@ -7,15 +8,17 @@ iters=20
 va_set=../data/$data/va.ffm
 tr_set=../data/$data/tr.ffm
 #params="-t ${iters} -s 16 --auto-stop --no-norm -p ${va_set} ${tr_set} ${log_dir}/best_model"
-params="-t ${iters} -s 1 --no-norm -p ${va_set} ${tr_set} ${log_dir}/best_model"
+#params="-t ${iters} -s 8 --auto-stop -p ${va_set} ${tr_set} ${log_dir}/best_model"
+#params="-t ${iters} -s 1 --no-norm -p ${va_set} ${tr_set} ${log_dir}/best_model"
+params="-t ${iters} -s 1 -p ${va_set} ${tr_set} ${log_dir}/best_model"
 
 task(){
 
 train_cmd="./ffm-train"
 
-for lr in 0.2
+for lr in 0.2 #2
 do
-    for l in 0 #.00002
+    for l in 0 #0.00002 0.0002 0.002 0.02 0.2
     do
         for k in 4 #1 2 4 8
         do
