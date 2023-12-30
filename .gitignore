@@ -1,0 +1,6 @@
+exp_logs/
+*.bin
+*.o
+ffm-predict
+ffm-train
+init_model
